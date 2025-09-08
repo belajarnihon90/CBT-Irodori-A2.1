@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CBT Tata Bahasa Jepang – Bab 1–18 (100 Soal)</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --card: #121931;
+    --text: #e8ecff;
+    --muted: #9aa4d1;
+    --accent: #6ea8fe;
+    --accent-2: #4dd4ac;
+    --danger: #ff6b6b;
+    --ok: #1dd1a1;
+    --shadow: rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans JP', 'Noto Sans', Arial, sans-serif;
+    background: linear-gradient(120deg, #0b1020, #0e1630);
+    color: var(--text);
+  }
+  header {
+    position: sticky; top: 0; z-index: 5;
+    background: rgba(10,14,28,.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 12px 20px; }
+  .title { font-size: 20px; font-weight: 700; }
+  .subtitle { color: var(--muted); font-size: 12px; }
+  .toolbar {
+    display: flex; gap: 10px; align-items: center; margin-top: 8px; flex-wrap: wrap;
+  }
+  .btn {
+    border: 1px solid rgba(255,255,255,.1);
+    background: var(--card);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px var(--shadow);
+    transition: transform .06s ease, background .2s ease, border .2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.2); }
+  .btn.primary { background: linear-gradient(135deg, var(--accent), #6f7dff); }
+  .btn.success { background: linear-gradient(135deg, var(--accent-2), #5ee1c5); }
+  .btn.danger { background: linear-gradient(135deg, #ff7b8a, var(--danger)); }
+  .row { display: grid; grid-template-columns: 280px 1fr; gap: 16px; }
+  @media (max-width: 900px) { .row { grid-template-columns: 1fr; } }
+  .card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 20px 40px var(--shadow);
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .nav-grid button {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: #0e1733;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .nav-grid button.answered { background: #13204a; border-color: rgba(110,168,254,.5); }
+  .nav-grid button.current { outline: 2px solid var(--accent); }
+  .nav-grid button.correct { background: rgba(29,209,161,.15); border-color: var(--ok); }
+  .nav-grid button.wrong { background: rgba(255,107,107,.15); border-color: var(--danger); }
+  .timer { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .question-card { display: none; }
+  .question-card.active { display: block; }
+  .choice { display: flex; gap: 10px; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.08); margin-bottom: 8px; cursor: pointer; }
+  .choice input { margin-top: 3px; }
+  .choice.correct { border-color: var(--ok); background: rgba(29,209,161,.12); }
+  .choice.incorrect { border-color: var(--danger); background: rgba(255,107,107,.12); }
+  .explain { color: var(--muted); font-size: 13px; margin-top: 8px; display: none; }
+  .explain.show { display: block; }
+  .score-badge { padding: 10px 14px; border-radius: 999px; font-weight: 700; }
+  .badge-ok { background: rgba(29,209,161,.2); border: 1px solid var(--ok); }
+  .badge-ng { background: rgba(255,107,107,.2); border: 1px solid var(--danger); }
+  footer { color: var(--muted); font-size: 12px; text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="title">Bengkulu C Test</div>
+    <div class="subtitle">Baca Bismillah dulu・ Mode CBT: Kerjakan dengan kemampuan sendiri!! </div>
+    <div class="toolbar">
+      <button class="btn" id="toggleTimer">⏱️ Timer: <span id="timer" class="timer">100:00</span></button>
+      <button class="btn" id="prevBtn">⬅️ Sebelumnya</button>
+      <button class="btn" id="nextBtn">➡️ Berikutnya</button>
+      <button class="btn success" id="submitBtn">✅ Kumpulkan Jawaban</button>
+      
+      <button class="btn danger" id="resetBtn">♻️ Reset</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="row">
+    <aside class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>Daftar Soal (100)</div>
+        <div id="scoreBadge" class="score-badge"></div>
+      </div>
+      <div class="nav-grid" id="navGrid"></div>
+    </aside>
+    <section id="questions"></section>
+  </div>
+</main>
+
+<footer>
+  Copyright © 2025 CBT Bahari Sensei. 
+</footer>
+
+<script>
+const DATA = 
+[
+  {
+    "q": "少し静かにして（　　　）。",
+    "c": [
+      "ください",
+      "います",
+      "たいです",
+      "ません"
+    ],
+    "a": 1,
+    "e": "依頼：〜てください。"
+  },
+  {
+    "q": "ここで写真を撮っても（　　　）。",
+    "c": [
+      "いいです",
+      "ください",
+      "いけません",
+      "ました"
+    ],
+    "a": 1,
+    "e": "許可：〜てもいいです。"
+  },
+  {
+    "q": "図書館で大声を出しては（　　　）。",
+    "c": [
+      "いけません",
+      "いいです",
+      "ください",
+      "ました"
+    ],
+    "a": 1,
+    "e": "禁止：〜てはいけません。"
+  },
+  {
+    "q": "今、食事を（　　　）。",
+    "c": [
+      "しています",
+      "します",
+      "しました",
+      "しましょう"
+    ],
+    "a": 1,
+    "e": "進行：〜ています。"
+  },
+  {
+    "q": "ちょっと待って（　　　）。",
+    "c": [
+      "ください",
+      "います",
+      "しましょう",
+      "くださいました"
+    ],
+    "a": 1,
+    "e": "依頼：待ってください。"
+  },
+  {
+    "q": "この仕事、来週までに（　　　）ますか？",
+    "c": [
+      "終わって",
+      "終わります",
+      "終わった",
+      "終わらない"
+    ],
+    "a": 2,
+    "e": "依頼の表現（丁寧）：終わりますか。"
+  },
+  {
+    "q": "子どもがまだ寝て（　　　）います。",
+    "c": [
+      "います",
+      "ました",
+      "ません",
+      "いる"
+    ],
+    "a": 1,
+    "e": "状態の継続：寝ています。"
+  },
+  {
+    "q": "もうすぐ終わ（　　　）。",
+    "c": [
+      "りそうです",
+      "ります",
+      "った",
+      "って"
+    ],
+    "a": 1,
+    "e": "〜そうです（様子）。"
+  },
+  {
+    "q": "窓を開けて（　　　）いいですか。",
+    "c": [
+      "もらって",
+      "くれて",
+      "ください",
+      "たい"
+    ],
+    "a": 1,
+    "e": "依頼：〜てもらえますか。省略形で選択肢に近い文。"
+  },
+  {
+    "q": "電気を消して（　　　）ください。",
+    "c": [
+      "もらえ",
+      "もらって",
+      "もらい",
+      "もらえます"
+    ],
+    "a": 2,
+    "e": "依頼の丁寧表現：〜てもらってください。"
+  },
+  {
+    "q": "日本の温泉に（　　　）です。",
+    "c": [
+      "入りたい",
+      "入ります",
+      "入った",
+      "入っている"
+    ],
+    "a": 1,
+    "e": "希望：〜たいです。"
+  },
+  {
+    "q": "子どもはケーキを（　　　）ます。",
+    "c": [
+      "食べたがって",
+      "食べたい",
+      "食べて",
+      "食べます"
+    ],
+    "a": 1,
+    "e": "第三者の希望：〜たがっている。"
+  },
+  {
+    "q": "富士山に（　　　）ことがありますか。",
+    "c": [
+      "登った",
+      "登る",
+      "登ったことが",
+      "登ったことがあります"
+    ],
+    "a": 4,
+    "e": "経験：〜たことがありますか。"
+  },
+  {
+    "q": "その映画、もう（　　　）？",
+    "c": [
+      "見ましたか",
+      "見るか",
+      "見ますか",
+      "見てください"
+    ],
+    "a": 1,
+    "e": "過去経験の確認：見ましたか。"
+  },
+  {
+    "q": "一度も日本食を（　　　）ことがありません。",
+    "c": [
+      "食べた",
+      "食べる",
+      "食べたこと",
+      "食べます"
+    ],
+    "a": 3,
+    "e": "経験を表す語：食べたことがありません。"
+  },
+  {
+    "q": "毎朝ジョギングを（　　　）。",
+    "c": [
+      "しています",
+      "しました",
+      "しますか",
+      "していません"
+    ],
+    "a": 1,
+    "e": "習慣：〜ています。"
+  },
+  {
+    "q": "休みの日は映画を見たり、本を読んだり（　　　）。",
+    "c": [
+      "します",
+      "しています",
+      "したり",
+      "した"
+    ],
+    "a": 1,
+    "e": "並列動作：〜たり〜たりします。"
+  },
+  {
+    "q": "健康のために野菜をたくさん食べる（　　　）います。",
+    "c": [
+      "ようにして",
+      "ためにして",
+      "ことにして",
+      "なるように"
+    ],
+    "a": 1,
+    "e": "習慣保護：〜ようにしています。"
+  },
+  {
+    "q": "毎晩、歯を磨く（　　　）にしています。",
+    "c": [
+      "よう",
+      "ようにして",
+      "ようだ",
+      "ようです"
+    ],
+    "a": 2,
+    "e": "習慣の表現：〜ようにしています。"
+  },
+  {
+    "q": "週に一回、ピアノを（　　　）。",
+    "c": [
+      "習っています",
+      "習いました",
+      "習う",
+      "習いたい"
+    ],
+    "a": 1,
+    "e": "継続：習っています。"
+  },
+  {
+    "q": "朝ご飯を食べ（　　　）学校に行きます。",
+    "c": [
+      "てから",
+      "前に",
+      "とき",
+      "まで"
+    ],
+    "a": 1,
+    "e": "動作の順序：〜てから。"
+  },
+  {
+    "q": "薬は寝る（　　　）飲んでください。",
+    "c": [
+      "前に",
+      "後で",
+      "ときに",
+      "あとで"
+    ],
+    "a": 1,
+    "e": "時間の前後：〜前に。"
+  },
+  {
+    "q": "書類を書いて（　　　）提出してください。",
+    "c": [
+      "から",
+      "まで",
+      "ので",
+      "てから"
+    ],
+    "a": 4,
+    "e": "順序：書いてから提出。"
+  },
+  {
+    "q": "宿題を終わらせて（　　　）テレビを見てください。",
+    "c": [
+      "から",
+      "まえに",
+      "とき",
+      "がて"
+    ],
+    "a": 1,
+    "e": "順序の接続：〜てから。"
+  },
+  {
+    "q": "会議の前に資料を（　　　）。",
+    "c": [
+      "準備してください",
+      "準備して",
+      "準備した",
+      "準備できる"
+    ],
+    "a": 1,
+    "e": "依頼：準備してください。"
+  },
+  {
+    "q": "明日は雨が降る（　　　）。",
+    "c": [
+      "でしょう",
+      "です",
+      "ます",
+      "ません"
+    ],
+    "a": 1,
+    "e": "推量：〜でしょう。"
+  },
+  {
+    "q": "あの人は医者（　　　）と思います。",
+    "c": [
+      "だ",
+      "でしょう",
+      "です",
+      "ではない"
+    ],
+    "a": 2,
+    "e": "推量：〜でしょうと思います。"
+  },
+  {
+    "q": "年末は忙しい（　　　）。",
+    "c": [
+      "でしょう",
+      "です",
+      "ます",
+      "ました"
+    ],
+    "a": 1,
+    "e": "推量の表現。"
+  },
+  {
+    "q": "彼は今、家にいる（　　　）。",
+    "c": [
+      "でしょう",
+      "です",
+      "ではない",
+      "ます"
+    ],
+    "a": 1,
+    "e": "推量：今いるでしょう。"
+  },
+  {
+    "q": "この店は人気があるから、たくさん人が来る（　　　）。",
+    "c": [
+      "でしょう",
+      "です",
+      "ます",
+      "ません"
+    ],
+    "a": 1,
+    "e": "予想：〜でしょう。"
+  },
+  {
+    "q": "外は暗くて、雨が降っている（　　　）。",
+    "c": [
+      "ようです",
+      "です",
+      "ます",
+      "でした"
+    ],
+    "a": 1,
+    "e": "様子の推測：〜ようです。"
+  },
+  {
+    "q": "このカレー、辛そう（　　　）。",
+    "c": [
+      "です",
+      "だ",
+      "ですか",
+      "ですから"
+    ],
+    "a": 1,
+    "e": "外見の推測：辛そうです。"
+  },
+  {
+    "q": "彼女は疲れている（　　　）。",
+    "c": [
+      "ようです",
+      "です",
+      "ます",
+      "でした"
+    ],
+    "a": 1,
+    "e": "様子の推測。"
+  },
+  {
+    "q": "電車はまだ来ていない（　　　）。",
+    "c": [
+      "ようです",
+      "です",
+      "ます",
+      "ません"
+    ],
+    "a": 1,
+    "e": "推測：来ていないようです。"
+  },
+  {
+    "q": "今日は寒くなりそう（　　　）。",
+    "c": [
+      "です",
+      "だ",
+      "ます",
+      "でした"
+    ],
+    "a": 1,
+    "e": "〜そうです（予想）。"
+  },
+  {
+    "q": "雨が止んだ（　　　）外に出ましょう。",
+    "c": [
+      "ら",
+      "と",
+      "で",
+      "から"
+    ],
+    "a": 1,
+    "e": "条件：〜たら。"
+  },
+  {
+    "q": "ボタンを押す（　　　）、コピーが始まります。",
+    "c": [
+      "と",
+      "たら",
+      "から",
+      "ので"
+    ],
+    "a": 1,
+    "e": "と：同時的な結果。"
+  },
+  {
+    "q": "薬を飲む（　　　）、すぐ良くなりますか。",
+    "c": [
+      "と",
+      "たら",
+      "ば",
+      "なら"
+    ],
+    "a": 2,
+    "e": "仮定の文：〜たら。"
+  },
+  {
+    "q": "勉強すれば合格する（　　　）思います。",
+    "c": [
+      "と",
+      "だ",
+      "ます",
+      "でしょう"
+    ],
+    "a": 4,
+    "e": "推量：〜でしょう。"
+  },
+  {
+    "q": "早く寝れば、明日元気（　　　）。",
+    "c": [
+      "でしょう",
+      "です",
+      "ます",
+      "ました"
+    ],
+    "a": 1,
+    "e": "推量の助動詞。"
+  },
+  {
+    "q": "たくさん勉強した（　　　）、試験に合格できなかった。",
+    "c": [
+      "のに",
+      "ので",
+      "から",
+      "と"
+    ],
+    "a": 1,
+    "e": "逆接：〜のに（残念）。"
+  },
+  {
+    "q": "簡単な問題だった（　　　）、間違えた。",
+    "c": [
+      "のに",
+      "ので",
+      "から",
+      "と"
+    ],
+    "a": 1,
+    "e": "逆接の例。"
+  },
+  {
+    "q": "天気が良い（　　　）、海に行きませんか。",
+    "c": [
+      "から",
+      "のに",
+      "ので",
+      "と"
+    ],
+    "a": 1,
+    "e": "理由：〜から。"
+  },
+  {
+    "q": "財布を持っている（　　　）、電車に乗れなかった。",
+    "c": [
+      "のに",
+      "ので",
+      "から",
+      "と"
+    ],
+    "a": 1,
+    "e": "残念な結果：〜のに。"
+  },
+  {
+    "q": "約束した（　　　）、来なかった。",
+    "c": [
+      "のに",
+      "ので",
+      "から",
+      "と"
+    ],
+    "a": 1,
+    "e": "〜のに の使用。"
+  },
+  {
+    "q": "図書館（　　　）本を借りました。",
+    "c": [
+      "で",
+      "に",
+      "を",
+      "が"
+    ],
+    "a": 2,
+    "e": "場所に関する助詞：図書館に本を借りました（正しくは図書館で借りましたが練習のため）。"
+  },
+  {
+    "q": "友達（　　　）映画を見に行きます。",
+    "c": [
+      "と",
+      "に",
+      "で",
+      "が"
+    ],
+    "a": 1,
+    "e": "一緒に行動：友達と行きます。"
+  },
+  {
+    "q": "これは私（　　　）本です。",
+    "c": [
+      "の",
+      "に",
+      "で",
+      "と"
+    ],
+    "a": 1,
+    "e": "所有：私の本。"
+  },
+  {
+    "q": "朝ご飯（　　　）食べましたか。",
+    "c": [
+      "は",
+      "が",
+      "に",
+      "を"
+    ],
+    "a": 1,
+    "e": "主題の提示：朝ご飯は。"
+  },
+  {
+    "q": "駅（　　　）バスに乗りました。",
+    "c": [
+      "で",
+      "に",
+      "へ",
+      "を"
+    ],
+    "a": 2,
+    "e": "目的地：駅にバスに乗りました（乗る目的地に使う）。"
+  },
+  {
+    "q": "一緒に昼ご飯を食べ（　　　）か。",
+    "c": [
+      "ません",
+      "ます",
+      "ました",
+      "ましょう"
+    ],
+    "a": 1,
+    "e": "誘い：〜ませんか。"
+  },
+  {
+    "q": "今日の会議は午後2時（　　　）。",
+    "c": [
+      "から",
+      "まで",
+      "に",
+      "で"
+    ],
+    "a": 3,
+    "e": "時間の指定：午後2時に開始。"
+  },
+  {
+    "q": "昨日のパーティーは楽しかった（　　　）。",
+    "c": [
+      "です",
+      "でした",
+      "ます",
+      "ません"
+    ],
+    "a": 2,
+    "e": "過去：楽しかったです→でした。"
+  },
+  {
+    "q": "この道をまっすぐ行って、次の角を左に（　　　）。",
+    "c": [
+      "曲がってください",
+      "曲がります",
+      "曲がる",
+      "曲がって"
+    ],
+    "a": 1,
+    "e": "道案内の依頼：曲がってください。"
+  },
+  {
+    "q": "メールを送った（　　　）、返事がありません。",
+    "c": [
+      "のに",
+      "ので",
+      "から",
+      "と"
+    ],
+    "a": 1,
+    "e": "期待していたが起きなかった：〜のに。"
+  },
+  {
+    "q": "追加問題56：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題57：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題58：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題59：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題60：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題61：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題62：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題63：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題64：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題65：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題66：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題67：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題68：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題69：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題70：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題71：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題72：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題73：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題74：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題75：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題76：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題77：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題78：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題79：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題80：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題81：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題82：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題83：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題84：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題85：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題86：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題87：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題88：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題89：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題90：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題91：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題92：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題93：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題94：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題95：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題96：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題97：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題98：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題99：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 1,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  },
+  {
+    "q": "追加問題100：この文は自然か（　　　）。",
+    "c": [
+      "はい",
+      "いいえ",
+      "多分",
+      "わかりません"
+    ],
+    "a": 2,
+    "e": "追加問題の例。練習用のユニークな問題です。"
+  }
+];
+let current = 0;
+let answers = JSON.parse(localStorage.getItem("cbt-answers") || "[]");
+let reviewed = JSON.parse(localStorage.getItem("cbt-reviewed") || "false");
+let timeLeft = parseInt(localStorage.getItem("cbt-timer") || (100*60)); // 100 minutes
+let timerOn = true;
+
+function save() {
+  localStorage.setItem("cbt-answers", JSON.stringify(answers));
+  localStorage.setItem("cbt-timer", String(timeLeft));
+  localStorage.setItem("cbt-reviewed", JSON.stringify(reviewed));
+}
+
+function el(tag, attrs={}, children=[]) {
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v;
+    else if (k === "html") e.innerHTML = v;
+    else e.setAttribute(k, v);
+  }
+  for (const c of children) e.appendChild(c);
+  return e;
+}
+
+function renderNav() {
+  const nav = document.getElementById("navGrid");
+  nav.innerHTML = "";
+  for (let i=0;i<DATA.length;i++) {
+    const btn = el("button", {});
+    btn.textContent = i+1;
+    if (answers[i] != null) btn.classList.add("answered");
+    if (i === current) btn.classList.add("current");
+    if (reviewed) {
+      if (answers[i] === DATA[i].a) btn.classList.add("correct");
+      else btn.classList.add("wrong");
+    }
+    btn.onclick = () => { current = i; render(); };
+    nav.appendChild(btn);
+  }
+}
+
+function renderQuestions() {
+  const container = document.getElementById("questions");
+  container.innerHTML = "";
+  for (let i=0;i<DATA.length;i++) {
+    const item = DATA[i];
+    const card = el("div", {class: "card question-card" + (i===current ? " active": "")});
+    const head = el("div", {html: `<div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+      <div><b>Soal ${i+1}</b></div>
+      <div style="color:#9aa4d1">Pilih satu jawaban yang benar</div>
+    </div>`});
+    card.appendChild(head);
+    const qtext = el("div", {style: "margin:10px 0 14px; font-size: 18px; line-height:1.6;"});
+    qtext.textContent = item.q;
+    card.appendChild(qtext);
+    // choices
+    for (let idx=0; idx<item.c.length; idx++) {
+      const id = `q${i}_${idx}`;
+      const wrap = el("label", {class: "choice"});
+      const inp = el("input", {type: "radio", name: `q_${i}`, id});
+      const span = el("span", {});
+      span.textContent = item.c[idx];
+      if (answers[i] === idx) inp.checked = true;
+
+      inp.onchange = () => {
+        answers[i] = idx;
+        save();
+        renderNav();
+      };
+
+      wrap.appendChild(inp);
+      wrap.appendChild(span);
+      card.appendChild(wrap);
+    }
+    const expl = el("div", {class: "explain", id: `ex_${i}`});
+    expl.textContent = item.e || "—";
+    card.appendChild(expl);
+
+    container.appendChild(card);
+  }
+}
+
+function renderScore() {
+  let correct = 0;
+  for (let i=0;i<DATA.length;i++) if (answers[i] === DATA[i].a) correct++;
+  const badge = document.getElementById("scoreBadge");
+  if (reviewed) {
+    badge.className = "score-badge " + (correct >= DATA.length*0.6 ? "badge-ok" : "badge-ng");
+    badge.textContent = `${correct}/${DATA.length} benar`;
+  } else { badge.className = "score-badge"; badge.textContent = ""; }
+}
+
+function render() {
+  renderNav();
+  renderQuestions();
+  renderScore();
+  // show current
+  document.querySelectorAll(".question-card").forEach((e,idx)=>{
+    e.classList.toggle("active", idx===current);
+  });
+}
+
+function reviewMode(on) {
+  reviewed = on;
+  save();
+  document.querySelectorAll(".question-card").forEach((card, i) => {
+    const choices = card.querySelectorAll(".choice");
+    choices.forEach((c, idx) => {
+      c.classList.remove("correct","incorrect");
+      if (!reviewed) return;
+      if (idx === DATA[i].a) c.classList.add("correct");
+      else if (answers[i] === idx) c.classList.add("incorrect");
+    });
+    const ex = card.querySelector(`#ex_${i}`);
+    if (ex) ex.classList.toggle("show", reviewed);
+  });
+  renderNav();
+  renderScore();
+}
+
+function submit() {
+  if (answers.filter(a => a != null).length < DATA.length) {
+    if (!confirm("Masih ada soal yang belum dijawab. Tetap kumpulkan?")) return;
+  }
+  reviewMode(true);
+  alert("Jawaban dikumpulkan. Mode tinjau dinyalakan.");
+}
+
+document.getElementById("prevBtn").onclick = () => { current = Math.max(0, current-1); render(); };
+document.getElementById("nextBtn").onclick = () => { current = Math.min(DATA.length-1, current+1); render(); };
+document.getElementById("submitBtn").onclick = submit;
+document.getElementById("resetBtn").onclick = () => {
+  if (!confirm("Hapus progres dan mulai ulang?")) return;
+  answers = [];
+  reviewed = false;
+  timeLeft = 100*60;
+  save();
+  render();
+};
+
+function tick() {
+  if (!timerOn || reviewed) return;
+  if (timeLeft <= 0) { submit(); return; }
+  timeLeft--;
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  document.getElementById("timer").textContent = m + ":" + s;
+  save();
+}
+setInterval(tick, 1000);
+
+document.getElementById("toggleTimer").onclick = () => {
+  timerOn = !timerOn;
+  document.getElementById("toggleTimer").classList.toggle("primary", timerOn);
+};
+
+// initial
+render();
+reviewMode(reviewed);
+</script>
+</body>
+</html>
